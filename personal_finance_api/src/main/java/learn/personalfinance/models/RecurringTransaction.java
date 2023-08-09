@@ -1,9 +1,8 @@
 package learn.personalfinance.models;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
-
-import javax.persistence.*;
 
 @Entity
 @Table(name = "RecurringTransaction")
@@ -13,11 +12,13 @@ public class RecurringTransaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private TransactionType type;
+
+
 
     @Column(nullable = false)
-    private Double amount;
+    private BigDecimal amount;
 
     @Column(nullable = false)
     private LocalDate startDate;  // the date when the first transaction occurs
@@ -27,6 +28,8 @@ public class RecurringTransaction {
 
     @Column
     private LocalDate endDate;  // date the recurring transaction ends, null if it doesn't stop
+
+    private LocalDate nextDate;
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
@@ -46,19 +49,19 @@ public class RecurringTransaction {
         this.id = id;
     }
 
-    public String getType() {
+    public TransactionType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(TransactionType type) {
         this.type = type;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -100,6 +103,14 @@ public class RecurringTransaction {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public LocalDate getNextDate() {
+        return nextDate;
+    }
+
+    public void setNextDate(LocalDate nextDate) {
+        this.nextDate = nextDate;
     }
 }
 

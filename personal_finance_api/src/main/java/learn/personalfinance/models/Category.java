@@ -1,3 +1,4 @@
+
 package learn.personalfinance.models;
 
 import javax.persistence.*;
@@ -12,6 +13,10 @@ public class Category {
 
     @Column(nullable = false, unique = true)
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TransactionType type; // Using the TransactionType enum
 
     // getters and setters
 
@@ -29,5 +34,13 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public TransactionType getType() {
+        return type;
+    }
+
+    public void setType(TransactionType type) {
+        this.type = type;
     }
 }

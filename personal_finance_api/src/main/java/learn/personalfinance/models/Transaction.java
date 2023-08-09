@@ -1,6 +1,8 @@
 package learn.personalfinance.models;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "Transaction")
@@ -11,10 +13,7 @@ public class Transaction {
     private Long id;
 
     @Column(nullable = false)
-    private String type;
-
-    @Column(nullable = false)
-    private Double amount;
+    private BigDecimal amount;
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
@@ -23,6 +22,24 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name="category_id", nullable=false)
     private Category category;
+
+    private LocalDate date;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TransactionType type;
+
+    // ...
+
+    public TransactionType getType() {
+        return type;
+    }
+
+    public void setType(TransactionType type) {
+        this.type = type;
+    }
+
+
 
     // getters and setters
 
@@ -34,19 +51,11 @@ public class Transaction {
         this.id = id;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -65,4 +74,13 @@ public class Transaction {
     public void setCategory(Category category) {
         this.category = category;
     }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 }
+
