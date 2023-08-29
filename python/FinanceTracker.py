@@ -1,12 +1,13 @@
 from collections import defaultdict
 from datetime import datetime, timedelta
+import pickle
 
 class FinanceTracker:
     def __init__(self, starting_balance):
         self.balance = starting_balance
-        self.fixed_income = defaultdict(lambda: {"amount": 0, "date": None, "frequency": None})
+        self.fixed_income = defaultdict(self.default_dict)
         self.variable_income = {}
-        self.fixed_expenses = defaultdict(lambda: {"amount": 0, "date": None, "frequency": None})
+        self.fixed_expenses = defaultdict(self.default_dict)
         self.variable_expenses = {}
 
     def to_date(self, dt):
@@ -14,6 +15,22 @@ class FinanceTracker:
             return dt.date()
         return dt
 
+    @staticmethod
+    def default_dict():
+        return {"amount": 0, "date": None, "frequency": None}
+
+    def save_to_file(self, filename='data.pkl'):
+            with open(filename, 'wb') as f:
+                pickle.dump(self, f)
+
+    @classmethod
+    def load_from_file(cls, filename='data.pkl'):
+        try:
+            with open(filename, 'rb') as f:
+                instance = pickle.load(f)
+                return instance
+        except FileNotFoundError:
+            return None
 
     def add_fixed_income(self, source, amount, date, frequency):
         self.fixed_income[source]['amount'] = amount
@@ -30,6 +47,30 @@ class FinanceTracker:
 
     def add_variable_expense(self, date, amount):
         self.variable_expenses[date] = amount
+
+    def delete_fixed_income(self, source):
+        if source in self.fixed_income:
+            del self.fixed_income[source]
+        else:
+            print("Source not found.")
+
+    def delete_variable_income(self, date):
+        if date in self.variable_income:
+            del self.variable_income[date]
+        else:
+            print("Date not found.")
+
+    def delete_fixed_expense(self, source):
+        if source in self.fixed_expenses:
+            del self.fixed_expenses[source]
+        else:
+            print("Source not found.")
+
+    def delete_variable_expense(self, date):
+        if date in self.variable_expenses:
+            del self.variable_expenses[date]
+        else:
+            print("Date not found.")
 
     def is_applicable(self, today, target_date, date, frequency):
         today = self.to_date(today)
